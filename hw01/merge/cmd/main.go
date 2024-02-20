@@ -9,5 +9,5 @@ import (
 func main() {
 	first := []int{1, 3, 5, 9}
 	second := []int{1, 2, 4, 5, 8}
-	fmt.Println(merge.MergeSortedSlices(first, second))
+	fmt.Println("Merged slice", merge.MergeSortedSlices(first, second))
 }
