@@ -140,7 +140,6 @@ func Test_conveyor_Write(t *testing.T) {
 
 			out, err := io.ReadAll(r)
 			assert.NoError(t, err)
-			t.Log(out)
 			assert.Equal(t, tt.want, string(out))
 		})
 	}
@@ -203,7 +202,6 @@ func Test_conveyor_Read(t *testing.T) {
 				res = append(res, v)
 			}
 
-			t.Log(res)
 			assert.Equal(t, tt.want, res)
 		})
 	}
@@ -283,7 +281,6 @@ enter a number or 'stop' to exit app: Graceful shutdown by 'stop' command!
 
 			out, err := io.ReadAll(rOut)
 			assert.NoError(t, err)
-			t.Log(out)
 			assert.Equal(t, tt.want, string(out))
 		})
 	}
