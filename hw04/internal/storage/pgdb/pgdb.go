@@ -30,6 +30,11 @@ func New(connStr string) (*PostgresStore, error) {
 	}, nil
 }
 
+// GetDB returns connection to DB.
+func (s *PostgresStore) GetDB() *sql.DB {
+	return s.db
+}
+
 // Close releases connection to DB.
 func (s *PostgresStore) Close() {
 	s.db.Close()
