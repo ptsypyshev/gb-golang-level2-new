@@ -113,7 +113,7 @@ func (s *PostgresStore) CreateFriendship(ctx context.Context, fr models.Friendsh
 // ReadFriends implements storage.FriendshipStor.
 func (s *PostgresStore) ReadFriends(ctx context.Context, id int) ([]models.User, error) {
 	var friends []models.User
-	query := "SELECT u.id, u.name, u.age FROM friendships f INNER JOIN users u ON f.source_id = u.id WHERE f.source_id = $1"
+	query := "SELECT u.id, u.name, u.age FROM friendships f INNER JOIN users u ON f.target_id = u.id WHERE f.source_id = $1"
 	rows, err := s.db.QueryContext(ctx, query, id)
 	if err != nil {
 		return nil, err

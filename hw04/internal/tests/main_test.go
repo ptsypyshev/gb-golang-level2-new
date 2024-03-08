@@ -31,6 +31,12 @@ const (
 `
 	updatedID4Response = `{"msg":"user with id 4 is successfully updated"}
 `
+	friendshipResponse = `{"msg":"users ivan and alex are friends now"}
+`
+	nullFriends = `{"friends":null}
+`
+	existFriends = `{"friends":[{"id":1,"name":"ivan","age":20}]}
+`
 )
 
 type IntegrationTestSuite struct {
@@ -203,5 +209,66 @@ func (s *IntegrationTestSuite) TestHandlers() {
 		resp, err := client.Do(req)
 		assert.Equal(t, http.StatusNoContent, resp.StatusCode)
 		assert.NoError(t, err)
+	})
+
+	t.Run("Read Friends Null", func(t *testing.T) {
+		var client http.Client
+
+		req, err := http.NewRequest(http.MethodGet, "http://localhost:8000/friends/3", nil)
+		req.Header.Set("Content-Type", "application/json")
+
+		assert.NoError(t, err)
+
+		resp, err := client.Do(req)
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+		assert.NoError(t, err)
+
+		defer resp.Body.Close()
+
+		resBody, err := io.ReadAll(resp.Body)
+		assert.NoError(t, err)
+
+		assert.Equal(t, nullFriends, string(resBody))
+	})
+
+	t.Run("Create Friendship", func(t *testing.T) {
+		var client http.Client
+
+		reqBody := `{"source_id": 1,"target_id": 3}`
+		req, err := http.NewRequest(http.MethodPost, "http://localhost:8000/friends", strings.NewReader(reqBody))
+		req.Header.Set("Content-Type", "application/json")
+
+		assert.NoError(t, err)
+
+		resp, err := client.Do(req)
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+		assert.NoError(t, err)
+
+		defer resp.Body.Close()
+
+		resBody, err := io.ReadAll(resp.Body)
+		assert.NoError(t, err)
+
+		assert.Equal(t, friendshipResponse, string(resBody))
+	})
+
+	t.Run("Read Friends Updated", func(t *testing.T) {
+		var client http.Client
+
+		req, err := http.NewRequest(http.MethodGet, "http://localhost:8000/friends/3", nil)
+		req.Header.Set("Content-Type", "application/json")
+
+		assert.NoError(t, err)
+
+		resp, err := client.Do(req)
+		assert.Equal(t, http.StatusOK, resp.StatusCode)
+		assert.NoError(t, err)
+
+		defer resp.Body.Close()
+
+		resBody, err := io.ReadAll(resp.Body)
+		assert.NoError(t, err)
+
+		assert.Equal(t, existFriends, string(resBody))
 	})
 }
